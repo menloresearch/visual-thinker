@@ -1,0 +1,23 @@
+{
+  "citation": "",
+  "description": "",
+  "features": {
+    "Maze_image": {
+      "_type": "Image"
+    },
+    "Prompt": {
+      "dtype": "string",
+      "_type": "Value"
+    },
+    "Cot_Response": {
+      "dtype": "string",
+      "_type": "Value"
+    },
+    "Response": {
+      "dtype": "string",
+      "_type": "Value"
+    }
+  },
+  "homepage": "",
+  "license": ""
+}
