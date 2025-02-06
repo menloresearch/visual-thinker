@@ -14,30 +14,7 @@ from maze_dataset.plotting import MazePlot
 from maze_dataset.tokenization import MazeTokenizer, TokenizationMode
 from maze_dataset.maze import SolvedMaze  # Import SolvedMaze
 import matplotlib.pyplot as plt
-
-def get_direction(current, next_pos):
-    """Convert coordinate changes to cardinal directions."""
-    current = eval(current.replace('PATH_START', '(1,3)').replace('PATH_END', '(2,3)'))
-    next_pos = eval(next_pos.replace('PATH_START', '(1,3)').replace('PATH_END', '(2,3)'))
-    
-    dx = next_pos[0] - current[0]
-    dy = next_pos[1] - current[1]
-    
-    if dx == 1: return "Go down"
-    if dx == -1: return "Go up"
-    if dy == 1: return "Go right"
-    if dy == -1: return "Go left"
-    return "Stay in place"
-
-def convert_path_to_directions(path):
-    """Convert list of coordinates to step-by-step directions."""
-    instructions = []
-    for i in range(len(path) - 1):
-        current = path[i]
-        next_pos = path[i + 1]
-        direction = get_direction(current, next_pos)
-        instructions.append(f"Step {i+1}: {direction}")
-    return instructions
+from utils import get_direction, convert_path_to_directions
 
 def generate_and_save_reasoning_data(
     n_mazes: int,
@@ -131,7 +108,6 @@ def generate_and_save_reasoning_data(
 
     # Save the data
     # if save_format == "arrow":
-    #     import pyarrow as pa
 
     #     maze_images_col = pa.array(images_dataset)
     #     instructions_col = pa.array(instructions)
