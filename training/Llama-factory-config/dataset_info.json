@@ -1,23 +1,30 @@
 {
-  "citation": "",
-  "description": "",
-  "features": {
-    "Maze_image": {
-      "_type": "Image"
-    },
-    "Prompt": {
-      "dtype": "string",
-      "_type": "Value"
-    },
-    "Cot_Response": {
-      "dtype": "string",
-      "_type": "Value"
-    },
-    "Response": {
-      "dtype": "string",
-      "_type": "Value"
-    }
-  },
-  "homepage": "",
-  "license": ""
+  "maze_reasoning": {
+      "hf_hub_url": "homebrewltd/Maze-Reasoning",
+      "formatting": "sharegpt",
+      "columns": {
+          "messages": "conversations"
+      },
+      "tags": {
+        "role_tag": "role",
+        "content_tag": "content",
+        "user_tag": "user",
+        "assistant_tag": "assistant",
+        "system_tag": "system"
+      }
+  }, 
+  "maze_reasoning_filter": {
+      "hf_hub_url": "homebrewltd/Maze-Reasoning-filter",
+      "formatting": "sharegpt",
+      "columns": {
+          "messages": "conversations"
+      },
+      "tags": {
+        "role_tag": "role",
+        "content_tag": "content",
+        "user_tag": "user",
+        "assistant_tag": "assistant",
+        "system_tag": "system"
+      }
+  }
 }
