@@ -1,5 +1,5 @@
 ### model
-model_name_or_path: ../DeepSeek-R1-Distill-Qwen-1.5B-Resized/
+model_name_or_path: deepseek-ai/DeepSeek-R1-Distill-Qwen-7B
 trust_remote_code: true
 enable_liger_kernel: true
 disable_gradient_checkpointing: true
@@ -8,25 +8,27 @@ disable_gradient_checkpointing: true
 stage: sft
 do_train: true
 finetuning_type: full
-deepspeed: examples/deepspeed/ds_z0_config.json  # choices: [ds_z0_config.json, ds_z2_config.json, ds_z3_config.json]
+deepspeed: examples/deepspeed/ds_z3_offload_config.json  # choices: [ds_z0_config.json, ds_z2_config.json, ds_z3_config.json, ds_z3_offload_config.json]
 
 ### dataset
-dataset: maze_reasoning
+dataset: maze_reasoning_filter
 template: deepseek3
 cutoff_len: 4096
-train_on_prompt: false
+train_on_prompt: true
 overwrite_cache: true
 preprocessing_num_workers: 32
+#packing: true
+#neat_packing: true
 
 ### output
-output_dir: saves/qwen2.5-1.5b-distil/full/sft
+output_dir: saves/qwen2.5-7b-distil/full/sft
 logging_steps: 1
 save_steps: 100
 plot_loss: true
 overwrite_output_dir: true
 
 ### train
-per_device_train_batch_size: 4
+per_device_train_batch_size: 2
 gradient_accumulation_steps: 4
 learning_rate: 1.0e-5
 num_train_epochs: 1.0
