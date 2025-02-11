@@ -6,9 +6,9 @@ from transformers import TrainingArguments, TextStreamer
 import re
 PatchFastRL("GRPO", FastLanguageModel)
 from trl import GRPOConfig, GRPOTrainer
-max_seq_length = 8192 # Can increase for longer reasoning traces
-lora_rank = 64 # Larger rank = smarter, but slower
-model_name = "deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B"
+max_seq_length = 4096 # Can increase for longer reasoning traces
+lora_rank = 32 # Larger rank = smarter, but slower
+model_name = "jan-hq/Deepseek-Qwen2.5-7B-Redistil"
 
 model, tokenizer = FastLanguageModel.from_pretrained(
     model_name = model_name,
@@ -40,7 +40,6 @@ dataset = train_ds.map(lambda x: { # type: ignore
 }) # type: ignore
 
 def extract_xml_answer(text: str) -> str:
-    print(text)
     try: 
         answer = text.split("</think>")[1]
         return answer.strip()
@@ -104,11 +103,11 @@ training_args = GRPOConfig(
     logging_steps = 1,
     bf16 = is_bfloat16_supported(),
     fp16 = not is_bfloat16_supported(),
-    per_device_train_batch_size = 2,
+    per_device_train_batch_size = 1,
     gradient_accumulation_steps = 1, # Increase to 4 for smoother training
     num_generations = 4, # Decrease if out of memory
     max_prompt_length = 612,
-    max_completion_length = 8192,
+    max_completion_length = 4096,
     # num_train_epochs = 1, # Set to 1 for a full training run
     max_steps = 10000,
     save_steps = 200,
