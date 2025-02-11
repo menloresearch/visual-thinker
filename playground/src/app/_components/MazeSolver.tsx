@@ -267,11 +267,6 @@ const MazeSolver = () => {
         });
         mazeStepsRef.current = processedSteps;
         setMazeSteps([...mazeStepsRef.current]);
-        if (mazeStepsRef.current.length > currentStepRef.current + 1) {
-          currentStepRef.current = currentStepRef.current + 1;
-          setCurrentStep(currentStepRef.current);
-        }
-        console.log(currentStepRef.current);
         setIsPlaying(false);
         setError("");
       }
