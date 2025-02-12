@@ -194,7 +194,7 @@ const MazeSolver = () => {
     return (
       <div
         className="grid gap-0"
-        style={{ gridTemplateColumns: `repeat(${maxCols}, 50px)` }}
+        style={{ gridTemplateColumns: `repeat(${maxCols}, 45px)` }}
       >
         {maze.map((row, rowIdx) =>
           row.map((cell, colIdx) => {
@@ -210,6 +210,7 @@ const MazeSolver = () => {
                 key={`${rowIdx}-${colIdx}`}
                 className={`w-12 h-12 flex items-center justify-center relative ${bgColor} transition-colors duration-300`}
                 style={{
+                   margin: "-1px", 
                   borderTop: cell.walls.up ? "2px solid black" : undefined,
                   borderBottom: cell.walls.down ? "2px solid black" : undefined,
                   borderLeft: cell.walls.left ? "2px solid black" : undefined,

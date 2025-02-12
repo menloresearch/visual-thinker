@@ -12,6 +12,7 @@ export async function POST(req: Request) {
   });
   const response = streamText({
     model: openai("./Deepseek-Qwen2.5-7B-Redistil-GRPO"),
+    temperature: 0.6,
     messages,
   });
   return response.toDataStreamResponse({
