@@ -11,7 +11,7 @@ export async function POST(req: Request) {
     apiKey: "menlo",
   });
   const response = streamText({
-    model: openai("./Deepseek-Qwen2.5-7B-Redistil-GRPO"),
+    model: openai("jan-hq/AlphaMaze-v0.1-1.5B-GRPO-cp-200"),
     temperature: 0.6,
     messages,
   });

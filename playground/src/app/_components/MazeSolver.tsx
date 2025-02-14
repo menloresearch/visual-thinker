@@ -9,6 +9,7 @@ import {
   Pause,
   RotateCcw,
   Send,
+  ShuffleIcon,
 } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import { useChat } from "@ai-sdk/react";
@@ -23,6 +24,7 @@ type MazeData = {
 }[][];
 
 export type MazeStep = MazeData[][][];
+export type MazeSample = { Prompt: string; Solution: string };
 
 const MazeSolver = () => {
   const [currentStep, setCurrentStep] = useState(0);
@@ -33,10 +35,11 @@ const MazeSolver = () => {
   const mazeStepsRef = useRef<MazeData[]>([]);
   const currentStepRef = useRef<number>(0);
   const [error, setError] = useState("");
+  const [mazePrompts, setMazePrompts] = useState<string[]>([]);
 
   const {
     messages,
-    input,
+    setInput,
     isLoading,
     handleInputChange,
     handleSubmit,
@@ -210,7 +213,7 @@ const MazeSolver = () => {
                 key={`${rowIdx}-${colIdx}`}
                 className={`w-12 h-12 flex items-center justify-center relative ${bgColor} transition-colors duration-300`}
                 style={{
-                   margin: "-1px", 
+                  margin: "-1px",
                   borderTop: cell.walls.up ? "2px solid black" : undefined,
                   borderBottom: cell.walls.down ? "2px solid black" : undefined,
                   borderLeft: cell.walls.left ? "2px solid black" : undefined,
@@ -273,6 +276,15 @@ const MazeSolver = () => {
       }
     } catch {}
   }, [messages]);
+
+  useEffect(() => {
+    if (window)
+      setMazePrompts(
+        JSON.parse(process.env.NEXT_PUBLIC_PROMPT_SAMPLES ?? "[]")?.map(
+          (e: MazeSample) => e.Prompt,
+        ) ?? [],
+      );
+  }, [window]);
 
   return (
     <div className="w-full h-screen overflow-clip bg-white p-6">
@@ -355,11 +367,25 @@ const MazeSolver = () => {
                 />
                 <Button
                   onClick={() => {
+                    const randomizedMaze =
+                      mazePrompts[
+                        Math.floor(Math.random() * mazePrompts.length)
+                      ].trim();
+                    setMaze(randomizedMaze);
+                    setInput(randomizedMaze);
+                  }}
+                  className="absolute right-2 top-2 bg-blue-600 hover:bg-blue-700 text-white"
+                  size="icon"
+                >
+                  <ShuffleIcon className="h-4 w-4" />
+                </Button>
+                <Button
+                  onClick={() => {
                     setMessages([]);
                     handleSubmit();
                   }}
-                  disabled={isLoading || !input.trim()}
-                  className="absolute right-2 top-2 bg-blue-600 hover:bg-blue-700 text-white"
+                  disabled={isLoading || !maze.trim()}
+                  className="absolute right-2 top-14 bg-blue-600 hover:bg-blue-700 text-white"
                   size="icon"
                 >
                   <Send className="h-4 w-4" />
