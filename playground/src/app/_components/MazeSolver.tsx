@@ -358,7 +358,7 @@ const MazeSolver = () => {
               <div className="relative overflow-hidden">
                 <Textarea
                   value={maze}
-                  onChange={(e) => handleInitialMazeInput(event.target.value)}
+                  onChange={(e) => handleInitialMazeInput(e.target.value)}
                   placeholder="Enter your maze configuration..."
                   className="pr-12 h-32 bg-white border-2 border-blue-100 text-gray-800 placeholder:text-gray-400"
                 />
