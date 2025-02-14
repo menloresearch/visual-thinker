@@ -19,6 +19,7 @@ from tqdm import tqdm
 from PIL import Image 
 from utils import (
     generate_maze_tokens_cot,
+    process_input,
 )
 from datasets import Dataset
 file_name = "maze_data.parquet"
@@ -54,6 +55,10 @@ dataset: MazeDataset = MazeDataset.from_config(
     gen_parallel=gen_parallel,  # Use the passed value
     # zanj=ZANJ(verbose=False, no_cache=False),
 )
+
+dataset = dataset.filter_by.path_length(min_length=1)
+dataset = dataset.filter_by.max_path_length(max_length=11)
+
 tokenizer = MazeTokenizer(
         tokenization_mode=TokenizationMode.AOTP_UT_rasterized, max_grid_size=grid_n
     )
@@ -63,10 +68,12 @@ images_data = []
 prompts_data = []
 cot_responses_data = []
 responses_data = []
+raw_token_data = []
 for maze in tqdm(dataset, desc="Processing Mazes"):
     maze_tok = maze.as_tokens(maze_tokenizer=tokenizer)
     raw_tokens = " ".join(maze_tok)
-    prompt, cot_steps, instructions, golden_answer = generate_maze_tokens_cot(raw_tokens)
+    adj_list_str, origin_str, target_str, path_str = process_input(raw_tokens)
+    prompt, cot_steps, instructions, golden_answer = generate_maze_tokens_cot(adj_list_str, origin_str, target_str, path_str)
     prompt = prompt_template.format(maze_prompt=prompt.strip())
     cot_response = ""
     for i, step in enumerate(cot_steps):
@@ -91,14 +98,28 @@ for maze in tqdm(dataset, desc="Processing Mazes"):
     prompts_data.append(prompt)
     cot_responses_data.append(cot_response)
     responses_data.append(golden_answer)
+    raw_token_data.append(raw_tokens)
 
 data = {
     "Maze_image" : images_data,
     "Prompt" : prompts_data,
     "Cot_Response" : cot_responses_data,
     "Response" : responses_data,
+    "raw_token": raw_token_data,
 }
 dataset = Dataset.from_dict(data)
+df = dataset.to_pandas()
+unique_indices = ~df['raw_token'].duplicated(keep='first')
+deduped_df = df[unique_indices]
+deduped_dataset = Dataset.from_pandas(deduped_df)
+total_rows = len(df)
+unique_rows = len(deduped_df)
+duplicates = total_rows - unique_rows
+
+print(f"Total rows before deduplication: {total_rows}")
+print(f"Rows after deduplication: {unique_rows}")
+print(f"Duplicates removed: {duplicates}")
+deduped_dataset.save_to_disk("./maze_data_2/")
 dataset.save_to_disk("./maze_data/")
 dataset.push_to_hub("jan-hq/Maze-Reasoning", split="train")
 
