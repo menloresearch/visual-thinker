@@ -33,7 +33,7 @@ def create_cot_response(batch):
                 wrong_cot_response += f"Step {i+1}: {instructions[i]}\n{step.strip()}\n\n"
 
         wall_hit_count = count_walls(adj_list_str, wrong_path.split()[-1])
-        if wall_hit_count != 3:
+        if wall_hit_count == 3:
             reset_message = "Hit a dead end. Let's reset to the original point and find another way."
         else:
             reset_message = "Heading in the wrong direction. Let's reset to the origin and try a different path."
@@ -79,7 +79,7 @@ def create_cot_response(batch):
                     wrong_response += f"Step {i+1}: {instructions[i]}\n{step.strip()}\n\n"
 
             wall_hit_count = count_walls(adj_list_str, wrong_path.split()[-1])
-            if wall_hit_count != 3:
+            if wall_hit_count == 3:
                 reset_message = "Hit a dead end."
             else:
                 reset_message = "Heading in the wrong direction."
