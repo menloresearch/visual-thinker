@@ -37,14 +37,8 @@ const MazeSolver = () => {
   const [error, setError] = useState("");
   const [mazePrompts, setMazePrompts] = useState<string[]>([]);
 
-  const {
-    messages,
-    setInput,
-    isLoading,
-    handleInputChange,
-    handleSubmit,
-    setMessages,
-  } = useChat();
+  const { messages, setInput, isLoading, handleSubmit, setMessages } =
+    useChat();
 
   const parseMazeState = (mazeText: string): MazeData => {
     try {
@@ -275,13 +269,13 @@ const MazeSolver = () => {
   }, [messages]);
 
   useEffect(() => {
-    if (window)
+    if (typeof window !== "undefined" && window)
       setMazePrompts(
         JSON.parse(process.env.NEXT_PUBLIC_PROMPT_SAMPLES ?? "[]")?.map(
           (e: MazeSample) => e.Prompt,
         ) ?? [],
       );
-  }, [window]);
+  }, []);
 
   return (
     <div className="w-full h-screen overflow-clip bg-white p-6">
@@ -358,7 +352,7 @@ const MazeSolver = () => {
               <div className="relative overflow-hidden">
                 <Textarea
                   value={maze}
-                  onChange={(e) => handleInitialMazeInput(e.target.value)}
+                  onChange={(e) => handleInitialMazeInput(e.target.value ?? "")}
                   placeholder="Enter your maze configuration..."
                   className="pr-12 h-32 bg-white border-2 border-blue-100 text-gray-800 placeholder:text-gray-400"
                 />
