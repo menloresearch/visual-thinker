@@ -354,7 +354,7 @@ const MazeSolver = () => {
                   value={maze}
                   onChange={(e) => handleInitialMazeInput(e.target.value ?? "")}
                   placeholder="Enter your maze configuration..."
-                  className="pr-12 h-32 bg-white border-2 border-blue-100 text-gray-800 placeholder:text-gray-400"
+                  className="pr-12 h-32 bg-white border-2 border-blue-100 text-gray-800 placeholder:text-gray-400 focus-visible:ring-0"
                 />
                 <Button
                   onClick={() => {
