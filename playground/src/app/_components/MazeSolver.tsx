@@ -161,7 +161,7 @@ const MazeSolver = () => {
     } catch {
       setError("Invalid maze format. Please check your input.");
     }
-    handleInputChange(event);
+    setInput(input);
   };
 
   useEffect(() => {
