@@ -134,10 +134,7 @@ const MazeSolver = () => {
     return pathMap;
   };
 
-  const handleInitialMazeInput = (
-    event: React.ChangeEvent<HTMLTextAreaElement>,
-  ) => {
-    const input = event.target.value;
+  const handleInitialMazeInput = (input: string) => {
     setMaze(input);
 
     if (!input.length) return;
@@ -361,7 +358,7 @@ const MazeSolver = () => {
               <div className="relative overflow-hidden">
                 <Textarea
                   value={maze}
-                  onChange={handleInitialMazeInput}
+                  onChange={(e) => handleInitialMazeInput(event.target.value)}
                   placeholder="Enter your maze configuration..."
                   className="pr-12 h-32 bg-white border-2 border-blue-100 text-gray-800 placeholder:text-gray-400"
                 />
@@ -373,6 +370,7 @@ const MazeSolver = () => {
                       ].trim();
                     setMaze(randomizedMaze);
                     setInput(randomizedMaze);
+                    handleInitialMazeInput(randomizedMaze);
                   }}
                   className="absolute right-2 top-2 bg-blue-600 hover:bg-blue-700 text-white"
                   size="icon"
