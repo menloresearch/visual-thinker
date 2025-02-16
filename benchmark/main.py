@@ -1,105 +1,92 @@
-import os
-import pandas as pd
-from datasets import load_dataset
-from tqdm import tqdm
+# Project Structure:
+# mazebench/
+# ├── models/
+# │   ├── __init__.py
+# │   ├── base.py
+# │   ├── vllm_model.py
+# │   └── hf_model.py
+# ├── evaluator.py
+# ├── utils.py
+# └── main.py
+
+# main.py
+import argparse
 import logging
-from typing import Dict, List, Optional
-import json
-from datetime import datetime
-from models.base import BaseModel
+from evaluator import MazeBenchEvaluator
+from models.vllm_model import VLLMModel
+from models.hf_model import HuggingFaceModel
 
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(levelname)s - %(message)s',
-    handlers=[
-        logging.StreamHandler(),
-        logging.FileHandler('mazebench_eval.log')
-    ]
-)
-
-class MazeBenchEvaluator:
-    """Main evaluator class for MazeBench."""
+def parse_args():
+    parser = argparse.ArgumentParser(description='MazeBench Evaluation Framework')
     
-    def __init__(self, model: BaseModel):
-        self.model = model
-        self.results = {
-            "model_name": model.model_name,
-            "timestamp": datetime.now().isoformat(),
-            "overall_accuracy": 0.0,
-            "level_accuracies": {},
-            "detailed_results": []
-        }
+    # Model configuration
+    parser.add_argument('--model-type', choices=['vllm', 'hf'], required=True,
+                       help='Model backend to use (vllm or hf)')
+    parser.add_argument('--model-name', required=True,
+                       help='Name or path of the model to evaluate')
+    
+    # Inference settings
+    parser.add_argument('--batch-size', type=int, default=8,
+                       help='Batch size for inference')
+    parser.add_argument('--temperature', type=float, default=0.0,
+                       help='Sampling temperature')
+    parser.add_argument('--max-tokens', type=int, default=512,
+                       help='Maximum number of tokens to generate')
+    
+    # VLLM specific settings
+    parser.add_argument('--tensor-parallel-size', type=int,
+                       help='Number of GPUs for tensor parallelism (VLLM only)')
+    
+    # Output settings
+    parser.add_argument('--output-dir', type=str, default='results',
+                       help='Directory to save evaluation results')
+    
+    return parser.parse_args()
 
-    def load_dataset(self) -> pd.DataFrame:
-        """Load the MazeBench dataset."""
-        dataset = load_dataset("homebrewltd/Maze-Bench-v0.1")
-        return pd.DataFrame(dataset['train'])
-
-    def evaluate_solution(self, maze_text: str, solution: str) -> bool:
-        """Evaluate a single solution."""
-        from maze_benchmark import benchmark_maze_solution
-        return benchmark_maze_solution(maze_text, solution)
-
-    def evaluate(self) -> Dict:
-        """Run the full evaluation."""
-        dataset = self.load_dataset()
-        total_correct = 0
-        level_stats = {}
-
-        logging.info(f"Starting evaluation of model: {self.model.model_name}")
+def main():
+    args = parse_args()
+    
+    # Initialize model based on type
+    if args.model_type == 'vllm':
+        model = VLLMModel(
+            model_name=args.model_name,
+            batch_size=args.batch_size,
+            temperature=args.temperature,
+            max_tokens=args.max_tokens,
+            tensor_parallel_size=args.tensor_parallel_size
+        )
+    else:  # HuggingFace
+        model = HuggingFaceModel(
+            model_name=args.model_name,
+            batch_size=args.batch_size,
+            temperature=args.temperature,
+            max_tokens=args.max_tokens
+        )
+    
+    # Initialize evaluator
+    evaluator = MazeBenchEvaluator(model)
+    
+    try:
+        # Run evaluation
+        results = evaluator.evaluate()
         
-        for i in tqdm(range(0, len(dataset), self.model.batch_size)):
-            batch = dataset.iloc[i:i + self.model.batch_size]
-            prompts = [self.model.format_prompt(row['Prompt']) 
-                      for _, row in batch.iterrows()]
-            
-            try:
-                solutions = self.model.generate(prompts)
-                
-                for (_, row), solution in zip(batch.iterrows(), solutions):
-                    level = row['Level']
-                    is_correct = self.evaluate_solution(row['Prompt'], solution)
-                    
-                    if level not in level_stats:
-                        level_stats[level] = {"correct": 0, "total": 0}
-                    
-                    level_stats[level]["total"] += 1
-                    if is_correct:
-                        level_stats[level]["correct"] += 1
-                        total_correct += 1
-                    
-                    self.results["detailed_results"].append({
-                        "level": level,
-                        "prompt": row['Prompt'],
-                        "solution": solution,
-                        "is_correct": is_correct
-                    })
-                
-            except Exception as e:
-                logging.error(f"Error processing batch: {e}")
-                continue
-
-        # Calculate metrics
-        total_problems = len(dataset)
-        self.results["overall_accuracy"] = (total_correct / total_problems) * 100
-
-        for level, stats in level_stats.items():
-            accuracy = (stats["correct"] / stats["total"]) * 100
-            self.results["level_accuracies"][level] = {
-                "accuracy": accuracy,
-                "correct": stats["correct"],
-                "total": stats["total"]
-            }
-
-        return self.results
-
-    def save_results(self, output_dir: str = "results") -> None:
-        """Save evaluation results."""
-        os.makedirs(output_dir, exist_ok=True)
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        filename = f"{output_dir}/mazebench_{self.model.model_name}_{timestamp}.json"
+        # Print summary results
+        print("\n=== MazeBench Evaluation Results ===")
+        print(f"Model: {args.model_name}")
+        print(f"Backend: {args.model_type}")
+        print(f"Overall Accuracy: {results['overall_accuracy']:.2f}%")
         
-        with open(filename, 'w') as f:
-            json.dump(self.results, f, indent=2)
+        print("\nLevel-wise Results:")
+        for level, stats in sorted(results['level_accuracies'].items()):
+            print(f"Level {level}: {stats['accuracy']:.2f}% "
+                  f"({stats['correct']}/{stats['total']})")
         
-        logging.info(f"Results saved to {filename}")
+        # Save detailed results
+        evaluator.save_results(args.output_dir)
+        
+    except Exception as e:
+        logging.error(f"Evaluation failed: {e}")
+        raise
+
+if __name__ == "__main__":
+    main()
