@@ -1,5 +1,5 @@
-CUDA_VISIBLE_DEVICES=2 python -m vllm.entrypoints.openai.api_server \
-    --model ./Deepseek-Qwen2.5-7B-Redistil-GRPO \
+vllm serve jan-hq/AlphaMaze-v0.1-1.5B-GRPO-cp-600 \
+    --served-model-name jan-hq/AlphaMaze-v0.1-1.5B-GRPO-cp-200 \
     --host 0.0.0.0 \
     --port 3347 \
     --tensor-parallel-size 1 \

@@ -149,8 +149,6 @@ def generate_mazes(
     print(f"Duplicates removed: {duplicates}")
 
     # Save dataset
-    output_path = Path(output_path)
-    output_path.parent.mkdir(parents=True, exist_ok=True)
     deduped_dataset.save_to_disk(output_path)
 
 def main():
