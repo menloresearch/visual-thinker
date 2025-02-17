@@ -47,34 +47,40 @@ class MazeBenchEvaluator:
         level_stats = {}
 
         logging.info(f"Starting evaluation of model: {self.model.model_name}")
-        
-        for batch in dataset.iter(batch_size=self.model.batch_size):
-            prompts = [self.model.format_prompt(prompt) for prompt in batch['Prompt']]
 
-            try:
-                solutions = []
-                answers = self.model.generate(prompts)
-                for answer in answers:
-                    solutions.append(extract_answer(answer))
+        batch_size = self.model.batch_size
+        num_batches = len(dataset) // batch_size + (len(dataset) % batch_size > 0)
 
-                for maze, level, solution in zip(batch['Prompt'], batch['Level'], solutions):
-                    is_correct = self.evaluate_solution(maze, solution)
-                    if level not in level_stats:
-                        level_stats[level] = {"correct": 0, "total": 0}
-                    level_stats[level]["total"] += 1
-                    if is_correct:
-                        level_stats[level]["correct"] += 1
-                        total_correct += 1
-                    self.results["detailed_results"].append({
-                        "level": level,
-                        "maze": maze,
-                        "solution": solution,
-                        "is_correct": is_correct
-                    })
+        with tqdm(total=num_batches, desc="Evaluating", unit="batch") as pbar:
+            for batch in dataset.iter(batch_size=batch_size):
+                prompts = [self.model.format_prompt(prompt) for prompt in batch['Prompt']]
 
-            except Exception as e:
-                logging.error(f"Error processing batch: {e}")
-                continue
+                try:
+                    solutions = []
+                    answers = self.model.generate(prompts)
+                    for answer in answers:
+                        solutions.append(extract_answer(answer))
+
+                    for maze, level, solution in zip(batch['Prompt'], batch['Level'], solutions):
+                        is_correct = self.evaluate_solution(maze, solution)
+                        if level not in level_stats:
+                            level_stats[level] = {"correct": 0, "total": 0}
+                        level_stats[level]["total"] += 1
+                        if is_correct:
+                            level_stats[level]["correct"] += 1
+                            total_correct += 1
+                        self.results["detailed_results"].append({
+                            "level": level,
+                            "maze": maze,
+                            "solution": solution,
+                            "is_correct": is_correct
+                        })
+                        
+                except Exception as e:
+                    logging.error(f"Error processing batch: {e}")
+                    continue
+
+                pbar.update(1)
 
         # Calculate metrics
         total_problems = len(dataset)

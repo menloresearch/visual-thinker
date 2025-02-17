@@ -23,7 +23,7 @@ def parse_args():
                        help='Maximum number of tokens to generate')
     
     # VLLM specific settings
-    parser.add_argument('--tensor-parallel-size', type=int,
+    parser.add_argument('--tensor-parallel-size', type=int, 
                        help='Number of GPUs for tensor parallelism (VLLM only)')
     
     # Output settings

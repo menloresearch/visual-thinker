@@ -68,6 +68,9 @@ def benchmark_maze_solution(maze_text, candidate_solution_text):
     Benchmarks the candidate solution on the maze and returns a boolean.
     """
     grid, nrows, ncols = parse_maze(maze_text)
+    if candidate_solution_text=="":
+        logging.error("Unable to parse solution. You may want to increase the max_tokens.")
+        return False
     
     origin = target = None
     for coord, info in grid.items():
