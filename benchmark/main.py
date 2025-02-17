@@ -1,15 +1,3 @@
-# Project Structure:
-# mazebench/
-# ├── models/
-# │   ├── __init__.py
-# │   ├── base.py
-# │   ├── vllm_model.py
-# │   └── hf_model.py
-# ├── evaluator.py
-# ├── utils.py
-# └── main.py
-
-# main.py
 import argparse
 import logging
 from evaluator import MazeBenchEvaluator
@@ -20,11 +8,12 @@ def parse_args():
     parser = argparse.ArgumentParser(description='MazeBench Evaluation Framework')
     
     # Model configuration
-    parser.add_argument('--model-type', choices=['vllm', 'hf'], required=True,
+    parser.add_argument('--engine-type', choices=['vllm', 'hf'], required=True,
                        help='Model backend to use (vllm or hf)')
     parser.add_argument('--model-name', required=True,
                        help='Name or path of the model to evaluate')
-    
+    parser.add_argument('--instruction-type', required=True,
+                       help='Instruction type used to guide the model or processing task.')
     # Inference settings
     parser.add_argument('--batch-size', type=int, default=8,
                        help='Batch size for inference')
@@ -47,9 +36,10 @@ def main():
     args = parse_args()
     
     # Initialize model based on type
-    if args.model_type == 'vllm':
+    if args.engine_type == 'vllm':
         model = VLLMModel(
             model_name=args.model_name,
+            prompt_template=args.instruction_type,
             batch_size=args.batch_size,
             temperature=args.temperature,
             max_tokens=args.max_tokens,
@@ -58,6 +48,7 @@ def main():
     else:  # HuggingFace
         model = HuggingFaceModel(
             model_name=args.model_name,
+            prompt_template=args.instruction_type,
             batch_size=args.batch_size,
             temperature=args.temperature,
             max_tokens=args.max_tokens
@@ -73,7 +64,7 @@ def main():
         # Print summary results
         print("\n=== MazeBench Evaluation Results ===")
         print(f"Model: {args.model_name}")
-        print(f"Backend: {args.model_type}")
+        print(f"Backend: {args.engine_type}")
         print(f"Overall Accuracy: {results['overall_accuracy']:.2f}%")
         
         print("\nLevel-wise Results:")

@@ -5,7 +5,13 @@ import logging
 logging.basicConfig(level=logging.INFO, format='%(levelname)s: %(message)s')
 
 # --- Helper functions ---
-
+def extract_answer(text: str) -> str:
+    # Parse answer from LLM with format <think> </think> {final_answer}
+    try: 
+        answer = text.split("</think>")[1]
+        return answer.strip()
+    except:
+        return ""
 def parse_token(token):
     """
     Given a token like "<|up_left_right_wall|>", returns the inner text.
@@ -47,7 +53,7 @@ def simulate_solution(grid, start, candidate_moves, nrows, ncols):
     """
     current = start
     for idx, move_token in enumerate(candidate_moves):
-        direction = parse_token(move_token)
+        direction = move_token 
         if direction in grid[current]["walls"]:
             return False, current, f"Move {idx+1} ({direction}) is blocked at {current}."
         dr, dc = move_delta(direction)
@@ -77,7 +83,8 @@ def benchmark_maze_solution(maze_text, candidate_solution_text):
         logging.error("Maze has no target.")
         return False
     
-    candidate_moves = candidate_solution_text.strip().split()
+    candidate_moves = re.findall(r"<\|(.*?)\|>?", candidate_solution_text)
+
     success, final_pos, error = simulate_solution(grid, origin, candidate_moves, nrows, ncols)
     
     if not success:
@@ -102,8 +109,7 @@ if __name__ == "__main__":
     <|3-0|><|left_right_wall|><|blank|><|3-1|><|down_left_wall|><|blank|><|3-2|><|down_right_wall|><|blank|><|3-3|><|down_left_right_wall|><|blank|><|3-4|><|left_right_wall|><|blank|>
     <|4-0|><|down_left_wall|><|blank|><|4-1|><|up_down_wall|><|blank|><|4-2|><|up_down_wall|><|blank|><|4-3|><|up_down_wall|><|blank|><|4-4|><|down_right_wall|><|blank|>
     """
-    candidate_solution_text = "<|right|> <|down|> <|right|> <|right|> <|up|> <|up|> <|right|> <|left|> <|right|> <|right|>"
+    candidate_solution_text = "<|right|><|down|><|right|><|right|><|up|><|up|><|right|><|left|><|right|><|right|>"
     
     result = benchmark_maze_solution(maze_text, candidate_solution_text)
-    logging.info("Benchmark result: %s", result)
-
+    print(f"Final Result: {result}")
