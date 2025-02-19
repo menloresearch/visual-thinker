@@ -3,6 +3,11 @@ on:
   pull_request:
     branches:
       - main
+    paths:
+      - "playground/**"
+      - ".github/workflows/template-docker.yaml"
+      - ".github/workflows/quality-gate-playground.yaml"
+      - ".github/workflows/deploy-playground.yaml"
 
 jobs:
   build-docker-x64:
