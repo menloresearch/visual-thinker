@@ -9,7 +9,7 @@ jobs:
     uses: ./.github/workflows/template-docker.yaml
     secrets: inherit
     with:
-      runs-on: ubuntu-latest
+      runs-on: ubuntu-latest-xlarge
       docker-file: api/Dockerfile
       context: api/        
       readme-file: ./README.md
