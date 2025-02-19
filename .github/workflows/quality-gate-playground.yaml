@@ -5,6 +5,7 @@ on:
       - main
     paths:
       - "playground/**"
+      - ".github/workflows/template-docker.yaml"
       - ".github/workflows/quality-gate-playground.yaml"
       - ".github/workflows/deploy-playground.yaml"
 
