@@ -20,7 +20,7 @@ RUN npm run build
 EXPOSE 3000
 
 # Set default API URL
-ENV API_URL=http://10.200.40.253:3347
+ENV API_URL=https://visual-thinker-be.menlo.ai
 
 # Start the application
 CMD ["npm", "start"]
