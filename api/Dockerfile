@@ -1,10 +1,17 @@
-FROM pytorch/pytorch:2.1.2-cuda12.1-cudnn8-devel
+# Build stage
+FROM pytorch/pytorch:2.1.2-cuda12.1-cudnn8-devel AS builder
+
+WORKDIR /build
+RUN pip install --upgrade pip && \
+    pip install vllm==0.3.3 --no-cache-dir
+
+# Runtime stage
+FROM pytorch/pytorch:2.1.2-cuda12.1-cudnn8-runtime
 
 WORKDIR /app
 
-# Install vLLM
-RUN pip install --upgrade pip && \
-    pip install vllm==0.3.3 --no-cache-dir
+# Copy vLLM from builder
+COPY --from=builder /usr/local/lib/python3.10/site-packages /usr/local/lib/python3.10/site-packages
 
 # Copy required files
 COPY config.yml api_tokens.yml ./
