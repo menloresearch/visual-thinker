@@ -18,3 +18,12 @@ jobs:
       build-args: |
         GIT_COMMIT=menloltd/visual-thinker:api-${{ github.sha }}
         GIT_COMMIT_MESSAGE=${{ github.event.head_commit.message }}
+  cleanup:
+    runs-on: ubuntu-24-04-docker
+    if: always()
+    needs: build-docker-x64
+    steps:
+      - name: Clean Docker
+        continue-on-error: true
+        run: |
+          echo "y" | docker system prune -af
