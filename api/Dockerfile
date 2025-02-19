@@ -11,9 +11,10 @@ FROM pytorch/pytorch:2.1.2-cuda12.1-cudnn8-runtime
 
 WORKDIR /app
 
-# Install vLLM directly in runtime stage
+# Install vLLM and add it to PATH
 RUN pip install --upgrade pip && \
-    pip install vllm==0.3.3 --no-cache-dir
+    pip install vllm==0.3.3 --no-cache-dir && \
+    ln -s /usr/local/bin/vllm /usr/bin/vllm
 
 # Copy required files
 COPY config.yml api_tokens.yml ./
