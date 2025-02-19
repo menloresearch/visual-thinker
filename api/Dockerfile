@@ -4,6 +4,7 @@ FROM pytorch/pytorch:2.1.2-cuda12.1-cudnn8-devel AS builder
 WORKDIR /build
 RUN pip install --upgrade pip && \
     pip install vllm==0.3.3 --no-cache-dir && \
+    pip install outlines \
     pip list  # List installed packages to verify installation
 
 # Runtime stage
