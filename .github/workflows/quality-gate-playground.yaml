@@ -16,12 +16,3 @@ jobs:
       readme-file: ./README.md
       docker-repo-name: menloltd/visual-thinker
       tags: menloltd/visual-thinker:playground-${{ github.sha }}
-  cleanup:
-    runs-on: ubuntu-24-04-docker
-    if: always()
-    needs: build-docker-x64
-    steps:
-      - name: Clean Docker
-        continue-on-error: true
-        run: |
-          echo "y" | docker system prune -af
