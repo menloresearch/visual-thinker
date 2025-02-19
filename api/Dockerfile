@@ -1,8 +1,17 @@
-FROM pytorch/pytorch:2.1.2-cuda12.1-cudnn8-devel
+# Build stage
+FROM pytorch/pytorch:2.1.2-cuda12.1-cudnn8-devel AS builder
+
+WORKDIR /build
+RUN pip install --upgrade pip && \
+    pip install vllm==0.3.3 --no-cache-dir && \
+    pip list  # List installed packages to verify installation
+
+# Runtime stage
+FROM pytorch/pytorch:2.1.2-cuda12.1-cudnn8-runtime
 
 WORKDIR /app
 
-# Install vLLM
+# Install vLLM directly in runtime stage
 RUN pip install --upgrade pip && \
     pip install vllm==0.3.3 --no-cache-dir
 
