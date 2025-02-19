@@ -1,0 +1,20 @@
+name: CI - Deploy Visual Thinker
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-docker-x64:
+    uses: ./.github/workflows/template-docker.yaml
+    secrets: inherit
+    with:
+      runs-on: ubuntu-latest
+      docker-file: playground/Dockerfile
+      context: playground/        
+      readme-file: ./README.md
+      docker-repo-name: menloltd/visual-thinker
+      tags: menloltd/visual-thinker:dev-${{ github.sha }}
+      build-args: |
+        GIT_COMMIT=menloltd/visual-thinker:dev-${{ github.sha }}
+        GIT_COMMIT_MESSAGE=${{ github.event.head_commit.message }}
