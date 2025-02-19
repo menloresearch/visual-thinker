@@ -1,5 +1,6 @@
-vllm serve jan-hq/AlphaMaze-v0.1-1.5B-GRPO-cp-600 \
-    --served-model-name jan-hq/AlphaMaze-v0.1-1.5B-GRPO-cp-200 \
+#!/bin/bash
+python3 -m vllm.entrypoints.api_server \
+    --model jan-hq/AlphaMaze-v0.1-1.5B-GRPO-cp-600 \
     --host 0.0.0.0 \
     --port 3347 \
     --tensor-parallel-size 1 \
