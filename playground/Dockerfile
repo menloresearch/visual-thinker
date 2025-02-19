@@ -1,14 +1,14 @@
 # Use official Node.js image
-FROM node:alpine
+FROM node:18-alpine
 
 # Set working directory
 WORKDIR /app
 
 # Copy package files
-COPY package.json ./
+COPY package*.json ./
 
 # Install dependencies
-RUN npm ci
+RUN npm install
 
 # Copy all files
 COPY . .
@@ -23,4 +23,4 @@ EXPOSE 3000
 ENV API_URL=http://localhost:8000
 
 # Start the application
-CMD ["next", "start"]
+CMD ["npm", "start"]
