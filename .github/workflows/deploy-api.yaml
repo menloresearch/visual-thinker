@@ -13,8 +13,8 @@ jobs:
       docker-file: api/Dockerfile
       context: api/        
       readme-file: ./README.md
-      docker-repo-name: menloltd/visual-thinker
-      tags: menloltd/visual-thinker:api-${{ github.sha }}
+      docker-repo-name: menloltd/visual-thinker-be
+      tags: menloltd/visual-thinker-be:dev-${{ github.sha }}
       build-args: |
-        GIT_COMMIT=menloltd/visual-thinker:api-${{ github.sha }}
+        GIT_COMMIT=menloltd/visual-thinker-be:dev-${{ github.sha }}
         GIT_COMMIT_MESSAGE=${{ github.event.head_commit.message }}

@@ -14,5 +14,5 @@ jobs:
       context: playground/
       is_push: false
       readme-file: ./README.md
-      docker-repo-name: menloltd/visual-thinker
-      tags: menloltd/visual-thinker:playground-${{ github.sha }}
+      docker-repo-name: menloltd/visual-thinker-fe
+      tags: menloltd/visual-thinker-fe:${{ github.sha }}
