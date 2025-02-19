@@ -14,5 +14,5 @@ jobs:
       context: api/
       is_push: false
       readme-file: ./README.md
-      docker-repo-name: menloltd/visual-thinker
-      tags: menloltd/visual-thinker:api-${{ github.sha }}
+      docker-repo-name: menloltd/visual-thinker-be
+      tags: menloltd/visual-thinker-be:${{ github.sha }}
