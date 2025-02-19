@@ -1,4 +1,4 @@
-name: CI - Deploy Visual Thinker
+name: CI - Deploy Visual Thinker Playground
 on:
   push:
     branches:
@@ -14,7 +14,7 @@ jobs:
       context: playground/        
       readme-file: ./README.md
       docker-repo-name: menloltd/visual-thinker
-      tags: menloltd/visual-thinker:dev-${{ github.sha }}
+      tags: menloltd/visual-thinker:playground-${{ github.sha }}
       build-args: |
-        GIT_COMMIT=menloltd/visual-thinker:dev-${{ github.sha }}
+        GIT_COMMIT=menloltd/visual-thinker:playground-${{ github.sha }}
         GIT_COMMIT_MESSAGE=${{ github.event.head_commit.message }}

@@ -1,4 +1,4 @@
-name: CI - Quality Gate Visual-Thinker
+name: CI - Quality Gate Visual Thinker Playground
 on:
   pull_request:
     branches:
@@ -11,8 +11,8 @@ jobs:
     with:
       runs-on: ubuntu-latest
       docker-file: playground/Dockerfile
-      context: .
+      context: playground/
       is_push: false
       readme-file: ./README.md
       docker-repo-name: menloltd/visual-thinker
-      tags: menloltd/visual-thinker:${{ github.sha }}
+      tags: menloltd/visual-thinker:playground-${{ github.sha }}

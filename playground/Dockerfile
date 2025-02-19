@@ -20,7 +20,7 @@ RUN npm run build
 EXPOSE 3000
 
 # Set default API URL
-ENV API_URL=http://localhost:8000
+ENV API_URL=http://localhost:3347
 
 # Start the application
 CMD ["npm", "start"]
