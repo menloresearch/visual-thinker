@@ -69,7 +69,7 @@ We used [LLaMA-Factory](https://github.com/hiyouga/LLaMA-Factory) for Supervised
 
 **Note:** These results suggest that reducing token complexity can lead to improved performance in translating spatial information into language.
 
-### Generalized Reward-based Policy Optimization (GRPO)
+### Group Relative Policy Optimization (GRPO)
 
 We employed [Unsloth](https://unsloth.ai/) for Generalized Reward-based Policy Optimization (GRPO) to further refine the model's maze-solving policy.
 
