@@ -11,7 +11,7 @@
 
 [**About**](#About) | [**Demo**](#Demo) | [**Models and Datasets**](#Models-and-Dataset) | [**Benchmarks**](#Benchmarks) | [**How to Run Locally**](#Run-Locally) | 
 
-<img src="assets/ichigo.jpeg" width="400"/>
+<img src="./alphamaze.gif" width="400"/>
 </div>
 
 ## About
@@ -23,12 +23,9 @@ Prior research, like [Microsoft's "Multimodal Visualization-of-Thought (MVoT)"](
 
 AlphaMaze tackle a text-based maze! See how it interprets the maze, plans its moves, and strategically resets when it encounters a dead end.
 
-![AlphaMaze Demo GIF](./alphamaze-demo.gif)
-
-_AlphaMaze in action._
-
 [![Watch the AlphaMaze Demo](https://img.youtube.com/vi/dUS9wR03on8/0.jpg)](https://www.youtube.com/watch?v=dUS9wR03on8)
-_Click here for the full demo video on YouTube._
+
+Alternatively, you can explore it on our [demo website](https://alphamaze.menlo.ai/).
 
 ## Models and Datasets
 
