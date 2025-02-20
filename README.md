@@ -10,7 +10,7 @@ Try out our model on HuggingFace:
 
 ## GRPO Progress
 Our GRPO training for maze solving is progressing well. Here's a snapshot of the GRPO progress:
-![GRPO Progress](./_assets/alphamaze/grpo_progress.png)
+![GRPO Progress](./grpo_progress.png)
 
 ## Next Steps
 We are exploring further GRPO enhancements to boost maze-solving capabilities. Stay tuned for more updates on how GRPO is paving the way for improved spatial reasoning in LLMs!
