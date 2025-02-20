@@ -71,7 +71,7 @@ We used [LLaMA-Factory](https://github.com/hiyouga/LLaMA-Factory) for Supervised
 
 ### Group Relative Policy Optimization (GRPO)
 
-We employed [Unsloth](https://unsloth.ai/) for Generalized Reward-based Policy Optimization (GRPO) to further refine the model's maze-solving policy.
+We employed [Unsloth](https://unsloth.ai/) for Group Relative Policy Optimization (GRPO) to further refine the model's maze-solving policy.
 
 The plot below shows the MazeBench scores (blue crosses) achieved during GRPO training, along with a linear regression trendline (red dashed line).  The upward trend demonstrates that GRPO effectively guides the model towards improved maze-solving strategies.
 
