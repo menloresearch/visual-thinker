@@ -2,7 +2,7 @@
 
 ## Demo
 Watch AlphaMaze in action:
-[![AlphaMaze Demo](https://img.youtube.com/vi/dUS9wR03on8/0.jpg)](https://www.youtube.com/embed/dUS9wR03on8)
+<iframe width="560" height="315" src="https://www.youtube.com/embed/dUS9wR03on8?si=bj5AEfxwBB61uIfN" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
 ## Model
 Try out our model on HuggingFace:  
