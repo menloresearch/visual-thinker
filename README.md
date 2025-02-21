@@ -6,7 +6,7 @@
 <a href='https://huggingface.co/homebrewltd/AlphaMaze-v0.2-1.5B'><img src='https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Models-blue'></a>
 <a href='https://huggingface.co/datasets/homebrewltd/Maze-Reasoning-v0.1'><img src='https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Data-green'></a>
 <a href='https://alphamaze.menlo.ai/'><img src='https://img.shields.io/badge/Project-Demo-violet'></a>
-<a href=''><img src='https://img.shields.io/badge/Paper-Arxiv-red'></a>
+<a href='https://arxiv.org/abs/2502.14669'><img src='https://img.shields.io/badge/ArXiv-Paper-violet'></a>
 -->
 
 [**About**](#About) | [**Demo**](#Demo) | [**Models and Datasets**](#Models-and-Dataset) | [**Benchmarks**](#Benchmarks) | [**How to Run Locally**](#Run-Locally) | 
