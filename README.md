@@ -34,7 +34,7 @@ You can find our AlphaMaze models on Hugging Face 🤗! We're committed to open-
 
 | Model        | Backbone                                                                 | Size  | Link                                                                      |
 |--------------|--------------------------------------------------------------------------|-------|----------------------------------------------------------------------------|
-| AlphaMaze-v0.1 | [DeepSeek-R1-Distill-Qwen-1.5B](https://huggingface.co/deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B) | 1.5B  | [🤗 AlphaMaze-v0.1](https://huggingface.co/homebrewltd/AlphaMaze-v0.2-1.5B) |
+| AlphaMaze-v0.2 | [DeepSeek-R1-Distill-Qwen-1.5B](https://huggingface.co/deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B) | 1.5B  | [🤗 AlphaMaze-v0.2](https://huggingface.co/homebrewltd/AlphaMaze-v0.2-1.5B) |
 
 ### Datasets
 
@@ -42,8 +42,8 @@ We've released our datasets on Hugging Face 🤗 to support reproducibility and 
 
 | Dataset                             | Description                                         | Size  | Link                                                                                    |
 |--------------------------------------|-----------------------------------------------------|-------|-----------------------------------------------------------------------------------------|
-| Maze-Reasoning-v0.1                  | Training set used for Supervised Fine-Tuning (SFT) | 420k  | [🤗 Maze-Reasoning-v0.1](https://huggingface.co/datasets/homebrewltd/Maze-Reasoning-v0.1) |
-| Maze-Reasoning-Reset-v0.1          | Training set for SFT, including reset actions        | 50k   | [🤗 Maze-Reasoning-Reset-v0.1](https://huggingface.co/datasets/homebrewltd/Maze-Reasoning-Reset-v0.1) |
+| Maze-Reasoning-v0.1                  | Training set used for Supervised Fine-Tuning (SFT) | 570k  | [🤗 Maze-Reasoning-v0.1](https://huggingface.co/datasets/homebrewltd/Maze-Reasoning-v0.1) |
+| Maze-Reasoning-Reset-v0.1          | Training set for SFT, including reset actions        | 470k   | [🤗 Maze-Reasoning-Reset-v0.1](https://huggingface.co/datasets/homebrewltd/Maze-Reasoning-Reset-v0.1) |
 | Maze-Reasoning-GRPO-v0.1             | Training set used for GRPO model                    | 180k  | [🤗 Maze-Reasoning-GRPO-v0.1](https://huggingface.co/datasets/homebrewltd/Maze-Reasoning-GRPO-v0.1) |
 
 ## Benchmarks
@@ -123,6 +123,15 @@ We're looking for collaborators and plan to expand the model's capabilities to i
 ## References
 
 ```bibtex
+@misc{dao2025alphamazeenhancinglargelanguage,
+      title={AlphaMaze: Enhancing Large Language Models' Spatial Intelligence via GRPO}, 
+      author={Alan Dao and Dinh Bach Vu},
+      year={2025},
+      eprint={2502.14669},
+      archivePrefix={arXiv},
+      primaryClass={cs.CL},
+      url={https://arxiv.org/abs/2502.14669}, 
+}
 ```
 
 ## Acknowledgement

@@ -33,7 +33,7 @@ class MazeBenchEvaluator:
 
     def load_dataset(self) -> pd.DataFrame:
         """Load the MazeBench dataset."""
-        dataset = load_dataset("homebrewltd/Maze-Bench-v0.1", split="test")
+        dataset = load_dataset("homebrewltd/Maze-Bench-v0.2", split="test")
         return dataset.remove_columns(['Maze_image'])
 
     def evaluate_solution(self, maze_text: str, solution: str) -> bool:
