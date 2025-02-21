@@ -123,12 +123,12 @@ def generate_mazes(
         "Prompt": prompts_data,
         "Cot_Response": cot_responses_data,
         "Response": responses_data,
-        # "raw_token": raw_token_data,
+        "raw_token": raw_token_data,
     }
     
     dataset = Dataset.from_dict(data)
     df = dataset.to_pandas()
-    unique_indices = ~df['Response'].duplicated(keep='first')
+    unique_indices = ~df['raw_token'].duplicated(keep='first')
     deduped_df = df[unique_indices]
     deduped_dataset = Dataset.from_pandas(deduped_df)
 

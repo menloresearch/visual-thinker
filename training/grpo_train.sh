@@ -1,0 +1,11 @@
+python train_grpo.py \
+--model_name "your-model" \
+--lora_rank 128 \
+--num_generations 4 \
+--per_device_train_batch_size 8 \
+--gradient_accumulation_steps 1 \
+--max_seq_length 4096 \
+--max_prompt_length 612 \
+--max_completion_length 4096 \
+--dataset_name "jan-hq/Maze-Reasoning-concat-v0.1" \
+--report_to "tensorboard"
