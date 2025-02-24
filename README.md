@@ -22,8 +22,6 @@ Prior research, like [Microsoft's "Multimodal Visualization-of-Thought (MVoT)"](
 
 AlphaMaze tackle a text-based maze! See how it interprets the maze, plans its moves, and strategically resets when it encounters a dead end.
 
-[![Watch the AlphaMaze Demo](https://img.youtube.com/vi/dUS9wR03on8/0.jpg)](https://www.youtube.com/watch?v=dUS9wR03on8)
-
 Alternatively, you can explore it on our [demo website](https://alphamaze.menlo.ai/).
 
 ## Models and Datasets
