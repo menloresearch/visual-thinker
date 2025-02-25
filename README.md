@@ -53,7 +53,7 @@ We've developed **MazeBench**, a standardized framework for evaluating maze-solv
 python main.py --model-type hf --model-name "homebrewltd/AlphaMaze-v0.2-1.5B"
 ```
 
-Check out the [MazeBench repository](./benchmark/README.md) to benchmark your own models, see results, and view the leaderboard of top-performing models on the [evaluation dataset](https://huggingface.co/datasets/homebrewltd/Maze-Bench-v0.2).
+Check out the [README](./benchmark/README.md) to benchmark your own models, see results, and view the leaderboard of top-performing models on the [evaluation dataset](https://huggingface.co/datasets/homebrewltd/Maze-Bench-v0.2).
 
 ### Supervised Fine-Tuning (SFT)
 

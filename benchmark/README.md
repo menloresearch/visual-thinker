@@ -26,13 +26,7 @@ MazeBench is a benchmarking framework for evaluating the spatial reasoning and n
 
 ### Setup
 
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/yourusername/mazebench.git
-   cd mazebench
-   ```
-
-2. Install dependencies:
+1. Install dependencies:
    ```bash
    pip install -r requirements.txt
    ```
