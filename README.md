@@ -44,7 +44,16 @@ We've released our datasets on Hugging Face 🤗 to support reproducibility and 
 | Maze-Reasoning-Reset-v0.1          | Training set for SFT, including reset actions        | 470k   | [🤗 Maze-Reasoning-Reset-v0.1](https://huggingface.co/datasets/homebrewltd/Maze-Reasoning-Reset-v0.1) |
 | Maze-Reasoning-GRPO-v0.1             | Training set used for GRPO model                    | 180k  | [🤗 Maze-Reasoning-GRPO-v0.1](https://huggingface.co/datasets/homebrewltd/Maze-Reasoning-GRPO-v0.1) |
 
-## Benchmarks
+## MazeBench
+
+We've developed **MazeBench**, a standardized framework for evaluating maze-solving capabilities in LLMs. The benchmark supports HuggingFace, VLLM, and OpenAI-compatible APIs.
+
+```bash
+# Run evaluation on any model
+python main.py --model-type hf --model-name "homebrewltd/AlphaMaze-v0.2-1.5B"
+```
+
+Check out the [MazeBench repository](https://github.com/yourusername/mazebench) to benchmark your own models, see results, and view the leaderboard of top-performing models on the [evaluation dataset](https://huggingface.co/datasets/homebrewltd/Maze-Bench-v0.2).
 
 ### Supervised Fine-Tuning (SFT)
 
