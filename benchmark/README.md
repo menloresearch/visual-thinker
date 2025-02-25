@@ -22,7 +22,6 @@ MazeBench is a benchmarking framework for evaluating the spatial reasoning and n
 - PyTorch 1.10+
 - HuggingFace Transformers (for HuggingFace models)
 - VLLM (for VLLM backend)
-- OpenAI Python client (for OpenAI-compatible APIs)
 
 ### Setup
 

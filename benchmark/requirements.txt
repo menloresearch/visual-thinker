@@ -1,0 +1,5 @@
+vllm
+openai
+transformers
+torch
+datasets
