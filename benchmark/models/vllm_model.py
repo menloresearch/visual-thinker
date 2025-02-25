@@ -15,8 +15,8 @@ class VLLMModel(BaseModel):
         
         self.llm = LLM(
             model=model_name,
-            # tensor_parallel_size=tensor_parallel_size,
-            # trust_remote_code=True
+            tensor_parallel_size=tensor_parallel_size,
+            trust_remote_code=True
         )
         self.tokenizer = AutoTokenizer.from_pretrained(model_name)
         self.prompt_template = prompt_template

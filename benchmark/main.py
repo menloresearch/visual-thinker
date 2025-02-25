@@ -40,6 +40,8 @@ def parse_args():
                        help='Number of retry attempts for failed requests (OpenAI-compatible APIs)')
     parser.add_argument('--organization', type=str,
                        help='Organization ID for API requests (OpenAI-compatible APIs)')
+    parser.add_argument('--skip-auth', action='store_true',
+                       help='Skip authentication for local endpoints (OpenAI-compatible APIs)')
     # Output settings
     parser.add_argument('--output-dir', type=str, default='results',
                        help='Directory to save evaluation results')
@@ -87,7 +89,8 @@ def main():
             max_tokens=args.max_tokens,
             request_timeout=args.request_timeout,
             retry_attempts=args.retry_attempts,
-            organization=args.organization
+            organization=args.organization,
+            skip_auth=args.skip_auth
         )
     
     # Initialize evaluator

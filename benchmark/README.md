@@ -57,7 +57,8 @@ python main.py \
 ```bash
 python main.py \
   --model-type vllm \
-  --model-name "meta-llama/Llama-2-70b-hf" \
+  --model-name "homebrewltd/AlphaMaze-v0.2-1.5B" \
+  --temperature 0.6 \
   --batch-size 8 \
   --tensor-parallel-size 4
 ```
@@ -67,7 +68,8 @@ python main.py \
 ```bash
 python main.py \
   --model-type hf \
-  --model-name "meta-llama/Llama-2-7b-hf" \
+  --model-name "homebrewltd/AlphaMaze-v0.2-1.5B" \
+  --temperature 0.6 \
   --batch-size 4
 ```
 
@@ -76,7 +78,7 @@ python main.py \
 ```bash
 python main.py \
   --model-type openai \
-  --model-name "gpt-4-turbo" \
+  --model-name "gpt-4-o3" \
   --api-key "your-api-key" \
   --api-base "https://api.openai.com/v1"
 ```

@@ -21,6 +21,7 @@ class OpenAIModel(BaseModel):
                  retry_attempts: int = 3,
                  retry_delay: int = 5,
                  organization: Optional[str] = None,
+                 skip_auth: bool = False,
                  **kwargs):
         """
         Initialize the OpenAI-compatible model.
@@ -36,6 +37,7 @@ class OpenAIModel(BaseModel):
             retry_attempts (int): Number of retry attempts for failed requests
             retry_delay (int): Delay between retries in seconds
             organization (str, optional): Organization ID for API requests
+            skip_auth (bool): Skip authentication for local endpoints
             **kwargs: Additional parameters
         """
         super().__init__(model_name, batch_size)
@@ -48,23 +50,31 @@ class OpenAIModel(BaseModel):
         self.retry_attempts = retry_attempts
         self.retry_delay = retry_delay
         self.organization = organization
+        self.skip_auth = skip_auth
         
-        if not self.api_key:
+        # Only require API key for non-local endpoints unless skip_auth is True
+        if not self.api_key and not self.skip_auth:
             raise ValueError(
-                "API key is required. Provide it either as a parameter or "
+                "API key is required for non-local endpoints. Provide it either as a parameter or "
                 "set the OPENAI_API_KEY environment variable."
             )
         
         self.headers = {
-            "Content-Type": "application/json",
-            "Authorization": f"Bearer {self.api_key}"
+            "Content-Type": "application/json"
         }
         
-        if self.organization:
+        # Only add authorization for non-local endpoints or if explicitly provided
+        if self.api_key and not self.skip_auth:
+            self.headers["Authorization"] = f"Bearer {self.api_key}"
+        
+        if self.organization and not self.skip_auth:
             self.headers["OpenAI-Organization"] = self.organization
             
         # Determine API endpoint
         self.chat_endpoint = f"{self.api_base}/chat/completions"
+        
+        logging.info(f"Initialized {'local' if is_local else 'remote'} OpenAI-compatible model: {model_name}")
+        logging.info(f"API endpoint: {self.chat_endpoint}")
             
         logging.info(f"Initialized OpenAI-compatible model: {model_name}")
         logging.info(f"API base: {api_base}")
@@ -90,6 +100,7 @@ class OpenAIModel(BaseModel):
                 {"role": "user", "content": prompt.strip()}
             ]
             format_prompts.append(chat)
+            
         results = []
         
         # Process prompts in the specified batch size
@@ -148,29 +159,56 @@ class OpenAIModel(BaseModel):
             "max_tokens": self.max_tokens
         }
         
-        response = requests.post(
-            self.chat_endpoint,
-            headers=self.headers,
-            data=json.dumps(payload),
-            timeout=self.request_timeout
-        )
-        
-        # Handle API errors
-        if response.status_code != 200:
-            error_msg = f"API request failed with status code {response.status_code}: {response.text}"
+        try:
+            logging.debug(f"Making API request to {self.chat_endpoint}")
+            response = requests.post(
+                self.chat_endpoint,
+                headers=self.headers,
+                data=json.dumps(payload),
+                timeout=self.request_timeout
+            )
+            
+            if response.status_code != 200:
+                error_msg = f"API request failed with status code {response.status_code}: {response.text}"
+                logging.error(error_msg)
+                raise Exception(error_msg)
+            
+            # Parse response
+            response_data = response.json()
+            logging.debug(f"API response: {json.dumps(response_data)[:200]}...")
+            
+            generated_text = ""
+            
+            # Standard OpenAI format
+            if "choices" in response_data and len(response_data["choices"]) > 0:
+                choice = response_data["choices"][0]
+                if "message" in choice and "content" in choice["message"]:
+                    generated_text = choice["message"]["content"]
+                elif "text" in choice:  # Some APIs use 'text' directly
+                    generated_text = choice["text"]
+            
+            # Alternative format used by some providers
+            elif "response" in response_data:
+                generated_text = response_data["response"]
+            
+            # If we still don't have text, log a warning but return what we have
+            if not generated_text:
+                logging.warning(f"Could not extract generated text from response: {response_data}")
+                return str(response_data)
+            
+            # Post-process to extract just the solution (assumes the model follows the expected format)
+            solution = self._extract_solution(generated_text)
+            
+            return solution
+            
+        except requests.exceptions.ConnectionError as e:
+            error_msg = f"Connection error when contacting API: {e}"
             logging.error(error_msg)
             raise Exception(error_msg)
-        
-        # Parse response
-        response_data = response.json()
-        
-        # Extract generated text
-        generated_text = response_data.get("choices", [{}])[0].get("message", {}).get("content", "")
-        
-        # Post-process to extract just the solution (assumes the model follows the expected format)
-        solution = self._extract_solution(generated_text)
-        
-        return solution
+        except json.JSONDecodeError as e:
+            error_msg = f"Invalid JSON response from API: {e}"
+            logging.error(error_msg)
+            raise Exception(error_msg)
 
     def _extract_solution(self, text: str) -> str:
         """
