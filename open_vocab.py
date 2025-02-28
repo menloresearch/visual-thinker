@@ -35,10 +35,6 @@ add_tokens = coordinate_tokens + movement_tokens + wall_token
 tokenizer.add_tokens(add_tokens)
 # resize
 total_new_tokens = 271 #fixme: cause number of added tokens is lower than number of padding(271)
-# num pad = embedding_size - vocab_size
-num_pad = len()
-print(total_new_tokens)
-model.resize_token_embeddings(old_vocab_size+total_new_tokens, mean_resizing=False)
 
 print("--- Initializing new embedding with average weight ---")
 print("___________________________________")
