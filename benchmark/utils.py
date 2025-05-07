@@ -5,6 +5,29 @@ import logging
 logging.basicConfig(level=logging.INFO, format='%(levelname)s: %(message)s')
 
 # --- Helper functions ---
+def _extract_solution(text: str) -> str:
+    """
+    Extract the solution from the generated text.
+    Cleans up the response to extract only the sequence of moves.
+    
+    Args:
+        text (str): Raw generated text
+        
+    Returns:
+        str: Extracted solution
+    """
+    # Find sequences like <|up|>, <|down|>, etc.
+    import re
+    move_pattern = re.compile(r'<\|(up|down|left|right)\|>')
+    moves = move_pattern.findall(text)
+    
+    # If no moves found, return the original text
+    if not moves:
+        return text
+    
+    # Reconstruct the proper format
+    solution = "".join([f"<|{move}|>" for move in moves])
+    return solution
 def extract_answer(text: str) -> str:
     # Parse answer from LLM with format <think> </think> {final_answer}
     try: 
@@ -67,10 +90,12 @@ def benchmark_maze_solution(maze_text, candidate_solution_text):
     """
     Benchmarks the candidate solution on the maze and returns a boolean.
     """
+    error_log = ""
     grid, nrows, ncols = parse_maze(maze_text)
     if candidate_solution_text=="":
+        error_log = "Unable to parse solution. You may want to increase the max_tokens."
         logging.error("Unable to parse solution. You may want to increase the max_tokens.")
-        return False
+        return False, error_log
     
     origin = target = None
     for coord, info in grid.items():
@@ -94,14 +119,16 @@ def benchmark_maze_solution(maze_text, candidate_solution_text):
         logging.error("Candidate solution is incorrect.")
         logging.error(error)
         logging.info("Final position reached: %s", final_pos)
-        return False
+        return False, error
     elif final_pos == target:
+        success_log = "Candidate solution is correct"
         logging.info("Candidate solution is correct. Reached target at %s", final_pos)
-        return True
+        return True, success_log
     else:
+        error_log = f"Candidate solution did not reach the target. Ended at {final_pos} but target is at {target}"
         logging.warning("Candidate solution did not reach the target.")
         logging.info("Ended at %s but target is at %s", final_pos, target)
-        return False
+        return False, error_log
 
 # --- Run the benchmark ---
 if __name__ == "__main__":

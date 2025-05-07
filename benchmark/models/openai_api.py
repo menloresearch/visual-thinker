@@ -12,6 +12,7 @@ class OpenAIModel(BaseModel):
     
     def __init__(self, 
                  model_name: str,
+                 prompt_template: str,
                  batch_size: int = 8,
                  api_key: Optional[str] = None,
                  api_base: str = "https://api.openai.com/v1",
@@ -40,7 +41,7 @@ class OpenAIModel(BaseModel):
             skip_auth (bool): Skip authentication for local endpoints
             **kwargs: Additional parameters
         """
-        super().__init__(model_name, batch_size)
+        super().__init__(model_name, prompt_template, batch_size)
         
         self.api_key = api_key or self._get_api_key_from_env()
         self.api_base = api_base
@@ -73,7 +74,7 @@ class OpenAIModel(BaseModel):
         # Determine API endpoint
         self.chat_endpoint = f"{self.api_base}/chat/completions"
         
-        logging.info(f"Initialized {'local' if is_local else 'remote'} OpenAI-compatible model: {model_name}")
+        logging.info(f"Initialized OpenAI-compatible model: {model_name}")
         logging.info(f"API endpoint: {self.chat_endpoint}")
             
         logging.info(f"Initialized OpenAI-compatible model: {model_name}")
@@ -150,13 +151,12 @@ class OpenAIModel(BaseModel):
         Returns:
             str: Generated response
         """
-        messages = [{"role": "user", "content": prompt}]
         
         payload = {
             "model": self.model_name,
-            "messages": messages,
+            "messages": prompt,
             "temperature": self.temperature,
-            "max_tokens": self.max_tokens
+            "max_tokens": self.max_tokens,
         }
         
         try:
@@ -196,10 +196,7 @@ class OpenAIModel(BaseModel):
                 logging.warning(f"Could not extract generated text from response: {response_data}")
                 return str(response_data)
             
-            # Post-process to extract just the solution (assumes the model follows the expected format)
-            solution = self._extract_solution(generated_text)
-            
-            return solution
+            return f"</think>{generated_text}"
             
         except requests.exceptions.ConnectionError as e:
             error_msg = f"Connection error when contacting API: {e}"
@@ -210,26 +207,3 @@ class OpenAIModel(BaseModel):
             logging.error(error_msg)
             raise Exception(error_msg)
 
-    def _extract_solution(self, text: str) -> str:
-        """
-        Extract the solution from the generated text.
-        Cleans up the response to extract only the sequence of moves.
-        
-        Args:
-            text (str): Raw generated text
-            
-        Returns:
-            str: Extracted solution
-        """
-        # Find sequences like <|up|>, <|down|>, etc.
-        import re
-        move_pattern = re.compile(r'<\|(up|down|left|right)\|>')
-        moves = move_pattern.findall(text)
-        
-        # If no moves found, return the original text
-        if not moves:
-            return text
-        
-        # Reconstruct the proper format
-        solution = " ".join([f"<|{move}|>" for move in moves])
-        return solution

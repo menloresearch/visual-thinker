@@ -26,7 +26,7 @@ def parse_args():
                        help='Maximum number of tokens to generate')
     
     # VLLM specific settings
-    parser.add_argument('--tensor-parallel-size', type=int, 
+    parser.add_argument('--tensor-parallel-size', type=int, default=1,
                        help='Number of GPUs for tensor parallelism (VLLM only)')
     
     # OpenAI API settings
@@ -82,6 +82,7 @@ def main():
         
         model = OpenAIModel(
             model_name=args.model_name,
+            prompt_template=args.instruction_type,
             batch_size=args.batch_size,
             api_key=api_key,
             api_base=args.api_base,

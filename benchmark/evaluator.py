@@ -62,7 +62,7 @@ class MazeBenchEvaluator:
                         solutions.append(extract_answer(answer))
 
                     for maze, level, solution in zip(batch['Prompt'], batch['Level'], solutions):
-                        is_correct = self.evaluate_solution(maze, solution)
+                        is_correct, error_log = self.evaluate_solution(maze, solution)
                         if level not in level_stats:
                             level_stats[level] = {"correct": 0, "total": 0}
                         level_stats[level]["total"] += 1
@@ -73,7 +73,8 @@ class MazeBenchEvaluator:
                             "level": level,
                             "maze": maze,
                             "solution": solution,
-                            "is_correct": is_correct
+                            "is_correct": is_correct,
+                            "error": error_log
                         })
                         
                 except Exception as e:
